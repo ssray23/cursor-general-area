@@ -1,3 +1,8 @@
 General research topics
 1. Microapp
 2. Web Sockets
+
+Medical
+1. Thyroglobulin 
+2. TSH
+3. Smear test
