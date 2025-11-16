@@ -25,7 +25,7 @@ html, body {
     padding: 0;
     font-family: Helvetica, Arial, sans-serif;
     background: #f6f7f8;
-    color: #000000;
+    color: #444444;
     display: box;
     align-items: center;
     justify-content: center;
@@ -36,15 +36,23 @@ h1 {
     font-size: 38px;
     font-family: Helvetica, Arial, sans-serif;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     margin-top: 0px;
     line-height: 1.3;
 }
 
 h2 {
     font-size: 24px;
-    margin-top: 0px;
-    margin-bottom: 10px;
+    margin-top: 24px;
+    margin-bottom: 12px;
+}
+
+h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #444444;
+    margin: 0 0 12px 0;
+    text-align: left;
 }
 
 p {
@@ -55,27 +63,28 @@ p {
 }
 
 .card {
-    background: {theme_color}1a;
-    border-radius: 12px;
+    background: #F5F5F5;
+    border-radius: 10px;
     padding: 18px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-    border: 1px solid #dfe6ea;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #999999;
+    margin: 12px 0 20px 0;
 }
 
 table {
     border-collapse: separate;
     border-spacing: 0;
     width: 100%;
-    margin: 10px 0 20px 0;
-    border: 1.5px solid #444444;
-    border-radius: 8px;
+    margin: 12px 0 24px 0;
+    border: 1px solid #999999;
+    border-radius: 10px;
     overflow: hidden;
     line-height: 1.4;
 }
 
 thead tr {
-    background: {theme_color};
-    color: #fff;
+    background: #E8E8E8;
+    color: #444444;
     line-height: 1.4;
 }
 
@@ -83,7 +92,8 @@ thead th {
     padding: 10px 12px;
     text-align: left;
     font-weight: 700;
-    border-right: 1.5px solid #444444;
+    border-right: 1px solid #999999;
+    color: #444444;
 }
 
 thead th:last-child {
@@ -92,8 +102,10 @@ thead th:last-child {
 
 tbody td {
     padding: 10px 12px;
-    border-top: 1.5px solid #444444;
-    border-right: 1.5px solid #444444;
+    border-top: 1px solid #999999;
+    border-right: 1px solid #999999;
+    color: #444444;
+    text-align: left;
 }
 
 tbody td:last-child {
@@ -105,14 +117,15 @@ tbody tr:nth-child(odd) {
 }
 
 tbody tr:nth-child(even) {
-    background: #f6f6f6;
+    background: #fcfafa;
 }
 
 tfoot td {
     padding: 10px 12px;
-    border-top: 1.5px solid #444444;
+    border-top: 1px solid #999999;
     font-weight: 600;
-    background: {theme_color}13;
+    background: #EEEEEE;
+    color: #444444;
 }
 
 .diagram {
@@ -129,26 +142,32 @@ tfoot td {
 }
 
 ul {
-    margin: 6px 0 12px 18px;
+    margin: 8px 0 16px 18px;
 }
 
 code {
-    background: #eef2f4;
+    background: #EEEEEE;
     padding: 2px 6px;
     border-radius: 4px;
     font-family: monospace;
+    color: #444444;
 }
 
 .note {
     font-size: 13px;
-    color: #444;
+    color: #444444;
     margin-top: 8px;
+    text-align: left;
 }
 
 .fact {
-    border-left: 6px solid {theme_color};
+    background: #F5F5F5;
+    border: 1px solid #999999;
+    border-left: 6px solid #5B9BD5;
+    border-radius: 10px;
     padding: 12px 16px;
-    margin: 10px 0;
+    margin: 12px 0 16px 0;
+    color: #444444;
 }
 
 .fact strong,
@@ -160,27 +179,27 @@ code {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
-    margin: 12px 0 18px;
+    margin: 12px 0 24px 0;
 }
 
 .stat {
-    text-align: center;
+    text-align: left;
     padding: 12px 10px;
-    border: 1.5px solid #000;
+    border: 1px solid #999999;
     border-radius: 10px;
-    background: {theme_color}27;
+    background: #F5F5F5;
 }
 
 .stat .big {
     font-size: 28px;
-    color: {theme_color};
+    color: #5B9BD5;
     font-weight: 800;
     line-height: 1.1;
 }
 
 .stat .sub {
     font-size: 14px;
-    color: {theme_color};
+    color: #444444;
     line-height: 1.3;
     margin: 10px 0;
 }
@@ -201,10 +220,10 @@ code {
 .figure .caption {
     display: block;
     max-width: 100%;
-    text-align: center;
+    text-align: left;
     font-size: 13px;
     line-height: 1.35;
-    color: {theme_color};
+    color: #444444;
 }
 
 .timeline {
@@ -220,8 +239,8 @@ code {
     left: 50px;
     top: 0;
     bottom: 0;
-    width: 2px;
-    background: {theme_color};
+    width: 1px;
+    background: #999999;
 }
 
 .timeline-item {
@@ -235,24 +254,23 @@ code {
     content: '';
     position: absolute;
     left: 44px;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 18px;
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: {theme_color};
+    background: #5B9BD5;
     border: 3px solid #fff;
-    box-shadow: 0 0 0 2px {theme_color};
+    box-shadow: 0 0 0 1px #999999;
 }
 
 .timeline-date {
     position: absolute;
     left: -10px;
-    top: 50%;
+    top: 18px;
     transform: translateY(-50%);
     font-size: 12px;
     font-weight: 600;
-    color: {theme_color};
+    color: #5B9BD5;
     writing-mode: vertical-rl;
     text-orientation: mixed;
     line-height: 1.2;
@@ -261,9 +279,9 @@ code {
 }
 
 .timeline-content {
-    background: #fff;
-    border: 1px solid {theme_color}40;
-    border-radius: 8px;
+    background: #F5F5F5;
+    border: 1px solid #999999;
+    border-radius: 10px;
     padding: 12px 16px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     font-family: Helvetica, Arial, sans-serif;
@@ -272,34 +290,36 @@ code {
 .timeline-title {
     font-size: 14px;
     font-weight: 600;
-    color: {theme_color};
+    color: #5B9BD5;
     margin: 0 0 6px 0;
     font-family: Helvetica, Arial, sans-serif;
+    text-align: left;
 }
 
 .timeline-description {
     font-size: 13px;
-    color: #333;
+    color: #444444;
     line-height: 1.4;
     margin: 0;
     font-family: Helvetica, Arial, sans-serif;
+    text-align: left;
 }
 
 .citations {
     margin: 20px 0;
     padding: 16px;
-    background: {theme_color}0d;
-    border-left: 4px solid {theme_color};
-    border-radius: 0 8px 8px 0;
+    background: #F5F5F5;
+    border: 1px solid #999999;
+    border-left: 6px solid #5B9BD5;
+    border-radius: 10px;
 }
 
 .citations h3 {
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 600;
-    color: {theme_color};
+    color: #444444;
     margin: 0 0 12px 0;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    text-align: left;
 }
 
 .citation {
@@ -307,7 +327,7 @@ code {
     align-items: flex-start;
     margin: 8px 0;
     padding: 8px 0;
-    border-bottom: 1px solid {theme_color}20;
+    border-bottom: 1px solid #CCCCCC;
 }
 
 .citation:last-child {
@@ -318,7 +338,7 @@ code {
     flex-shrink: 0;
     width: 24px;
     height: 24px;
-    background: {theme_color};
+    background: #5B9BD5;
     color: white;
     border-radius: 50%;
     display: flex;
@@ -332,11 +352,12 @@ code {
 
 .citation-content {
     flex-grow: 1;
+    text-align: left;
 }
 
 .citation-title {
     font-weight: 600;
-    color: {theme_color};
+    color: #5B9BD5;
     font-size: 14px;
     line-height: 1.3;
     margin: 0 0 4px 0;
@@ -346,13 +367,13 @@ code {
 }
 
 .citation-title:hover {
-    color: {theme_color};
+    color: #5B9BD5;
     text-decoration: underline;
     transform: translateX(2px);
 }
 
 .citation-snippet {
-    color: #555;
+    color: #444444;
     font-size: 13px;
     line-height: 1.4;
     margin: 0;

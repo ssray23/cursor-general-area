@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A4 CSS Style Guide Test</title>
+    <link rel="stylesheet" href="A4.css">
+</head>
+<body>
+    <div class="a4">
+        <h1>Professional Minimalist Style Guide</h1>
+        <p>This document demonstrates all the styled elements including tables, fact boxes, timelines, and stat boxes with a professional, minimalist aesthetic.</p>
+
+        <h2>Tables</h2>
+        <p>Tables feature thin gray borders (1px), light gray headers, and alternating row backgrounds for easy reading.</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Status</th>
+                    <th>Priority</th>
+                    <th>Owner</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Authentication Module</td>
+                    <td>Complete</td>
+                    <td>High</td>
+                    <td>Security Team</td>
+                </tr>
+                <tr>
+                    <td>User Dashboard</td>
+                    <td>In Progress</td>
+                    <td>Medium</td>
+                    <td>Frontend Team</td>
+                </tr>
+                <tr>
+                    <td>API Gateway</td>
+                    <td>Complete</td>
+                    <td>High</td>
+                    <td>Backend Team</td>
+                </tr>
+                <tr>
+                    <td>Reporting System</td>
+                    <td>Planned</td>
+                    <td>Low</td>
+                    <td>Analytics Team</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4">Total Components: 4</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <h2>Fact Boxes</h2>
+        <p>Fact boxes use light backgrounds with thin borders and blue left accents to draw attention to important information.</p>
+        
+        <div class="fact">
+            <strong>Key Insight:</strong> The new authentication system reduces login time by 40% while maintaining enterprise-grade security standards. This improvement enhances user experience across all platforms.
+        </div>
+
+        <div class="fact">
+            <strong>Important Note:</strong> All components must pass security audits before deployment to production environments. Regular penetration testing is scheduled quarterly.
+        </div>
+
+        <h2>Statistics Grid</h2>
+        <p>Stat boxes display key metrics with emphasis on the numbers using blue accents.</p>
+        
+        <div class="stat-grid">
+            <div class="stat">
+                <div class="big">2.5M</div>
+                <div class="sub">Active Users</div>
+            </div>
+            <div class="stat">
+                <div class="big">99.9%</div>
+                <div class="sub">Uptime</div>
+            </div>
+            <div class="stat">
+                <div class="big">24/7</div>
+                <div class="sub">Support</div>
+            </div>
+        </div>
+
+        <h2>Timeline</h2>
+        <p>Timelines show chronological progression with clean visual elements and rounded containers.</p>
+        
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-date">Q1 2024</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Project Kickoff</div>
+                    <div class="timeline-description">Initial planning and requirement gathering. Stakeholder meetings conducted to define project scope and objectives.</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">Q2 2024</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Development Phase</div>
+                    <div class="timeline-description">Core features implemented including authentication, user management, and dashboard functionality.</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">Q3 2024</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Testing & QA</div>
+                    <div class="timeline-description">Comprehensive testing conducted across all modules. Bug fixes and performance optimization completed.</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">Q4 2024</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Production Launch</div>
+                    <div class="timeline-description">Successful deployment to production environment. Post-launch monitoring and user feedback collection initiated.</div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Citations</h2>
+        <p>Citations are styled with numbered badges and organized in a clean, professional format.</p>
+        
+        <div class="citations">
+            <h3>References</h3>
+            
+            <div class="citation">
+                <div class="citation-number">1</div>
+                <div class="citation-content">
+                    <a href="#" class="citation-title">Modern Web Security Best Practices</a>
+                    <p class="citation-snippet">Comprehensive guide to implementing enterprise-grade security measures in web applications, including authentication protocols and data encryption.</p>
+                </div>
+            </div>
+            
+            <div class="citation">
+                <div class="citation-number">2</div>
+                <div class="citation-content">
+                    <a href="#" class="citation-title">User Experience Design Principles</a>
+                    <p class="citation-snippet">Research-backed principles for creating intuitive and accessible user interfaces that enhance user satisfaction and engagement.</p>
+                </div>
+            </div>
+            
+            <div class="citation">
+                <div class="citation-number">3</div>
+                <div class="citation-content">
+                    <a href="#" class="citation-title">Scalable System Architecture</a>
+                    <p class="citation-snippet">Architectural patterns for building systems that can handle millions of concurrent users while maintaining performance and reliability.</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>Additional Elements</h2>
+        
+        <div class="card">
+            <h2>Card Component</h2>
+            <p>Cards provide contained sections with subtle backgrounds and borders. They're perfect for grouping related content.</p>
+            <ul>
+                <li>Light gray background (#F5F5F5)</li>
+                <li>Thin gray border (1px solid #999999)</li>
+                <li>10px border radius for rounded corners</li>
+                <li>Professional spacing and padding</li>
+                <li>Dark gray text (#444444) for readability</li>
+            </ul>
+        </div>
+
+        <p><strong>Code Example:</strong> Inline code elements like <code>const value = 42;</code> use light backgrounds with consistent styling.</p>
+
+        <p class="note">Note: This style guide demonstrates all major components. The design emphasizes readability with grayscale colors (#EEEEEE to #666666) and blue (#5B9BD5) for emphasis.</p>
+
+    </div>
+</body>
+</html>
+
