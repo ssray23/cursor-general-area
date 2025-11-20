@@ -36,27 +36,57 @@ h1 {
     font-size: 38px;
     font-family: Helvetica, Arial, sans-serif;
     font-weight: bold;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
     margin-top: 0px;
     line-height: 1.3;
 }
 
 h2 {
     font-size: 24px;
-    margin-top: 24px;
-    margin-bottom: 12px;
+    margin-top: 16px;
+    margin-bottom: 6px;
 }
 
 h3 {
     font-size: 18px;
-    font-weight: 600;
-    color: #444444;
-    margin: 0 0 12px 0;
-    text-align: left;
+    margin-top: 12px;
+    margin-bottom: 6px;
+}
+
+.card h2:first-child,
+.card h3:first-child,
+.card h4:first-child,
+.card h5:first-child,
+.card h6:first-child {
+    margin-top: 0;
+}
+
+.card h2:last-child,
+.card h3:last-child,
+.card h4:last-child,
+.card h5:last-child,
+.card h6:last-child {
+    margin-bottom: 0;
+}
+
+.fact h2:first-child,
+.fact h3:first-child,
+.fact h4:first-child,
+.fact h5:first-child,
+.fact h6:first-child {
+    margin-top: 0;
+}
+
+.fact h2:last-child,
+.fact h3:last-child,
+.fact h4:last-child,
+.fact h5:last-child,
+.fact h6:last-child {
+    margin-bottom: 0;
 }
 
 p {
-    margin: 6px 0 12px 0;
+    margin: 4px 0 8px 0;
     line-height: 1.6;
     font-size: 16px;
     font-family: Helvetica, Arial, sans-serif;
@@ -65,18 +95,40 @@ p {
 .card {
     background: #F5F5F5;
     border-radius: 10px;
-    padding: 18px;
+    padding: 12px 16px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid #999999;
-    margin: 12px 0 20px 0;
+    border: 1.5px solid #888888;
+    margin: 6px 0 10px 0;
 }
+
+.card p {
+    margin: 0;
+}
+
+.card h2,
+.card h3,
+.card h4,
+.card h5,
+.card h6 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.card ul {
+    margin: 0 0 0 18px;
+}
+
+.card pre {
+    margin: 0;
+}
+
 
 table {
     border-collapse: separate;
     border-spacing: 0;
     width: 100%;
-    margin: 12px 0 24px 0;
-    border: 1px solid #999999;
+    margin: 10px 0 20px 0;
+    border: 1.5px solid #888888;
     border-radius: 10px;
     overflow: hidden;
     line-height: 1.4;
@@ -92,7 +144,8 @@ thead th {
     padding: 10px 12px;
     text-align: left;
     font-weight: 700;
-    border-right: 1px solid #999999;
+    border-right: 1px solid #BBBBBB;
+    border-bottom: 1px solid #BBBBBB;
     color: #444444;
 }
 
@@ -102,10 +155,14 @@ thead th:last-child {
 
 tbody td {
     padding: 10px 12px;
-    border-top: 1px solid #999999;
-    border-right: 1px solid #999999;
+    border-top: 1px solid #BBBBBB;
+    border-right: 1px solid #BBBBBB;
     color: #444444;
     text-align: left;
+}
+
+tbody td:first-child {
+    font-weight: bold;
 }
 
 tbody td:last-child {
@@ -117,7 +174,7 @@ tbody tr:nth-child(odd) {
 }
 
 tbody tr:nth-child(even) {
-    background: #fcfafa;
+    background: #F5F5F5;
 }
 
 tfoot td {
@@ -131,10 +188,22 @@ tfoot td {
 .diagram {
     display: flex;
     justify-content: center;
-    margin: 12px auto;
-    padding: 10px 12px;
-    overflow: visible;
-    height: 100px;
+    align-items: center;
+    margin: 10px auto;
+    padding: 10px 15px;
+    overflow: hidden;
+    width: calc(100% - 50px);
+    max-width: calc(100% - 50px);
+    min-height: 200px;
+    box-sizing: border-box;
+}
+
+.diagram svg {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+    max-height: 600px;
+    display: block;
 }
 
 .small {
@@ -142,15 +211,42 @@ tfoot td {
 }
 
 ul {
-    margin: 8px 0 16px 18px;
+    margin: 6px 0 12px 18px;
 }
 
 code {
-    background: #EEEEEE;
-    padding: 2px 6px;
-    border-radius: 4px;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
     font-family: monospace;
     color: #444444;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow-x: auto;
+    margin: 16px 0;
+    padding: 12px;
+    background: #F7F7F7;
+    border: 1px solid #DDDDDD;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+pre code {
+    background: transparent;
+    padding: 0;
+    border: none;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .note {
@@ -162,12 +258,86 @@ code {
 
 .fact {
     background: #F5F5F5;
-    border: 1px solid #999999;
+    border: 1.5px solid #888888;
     border-left: 6px solid #5B9BD5;
     border-radius: 10px;
     padding: 12px 16px;
-    margin: 12px 0 16px 0;
+    margin: 6px 0 10px 0;
     color: #444444;
+}
+
+.fact + .fact {
+    margin-top: 14px;
+}
+
+.fact p {
+    margin: 0;
+}
+
+.fact h2,
+.fact h3,
+.fact h4,
+.fact h5,
+.fact h6 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.fact ul {
+    margin: 0 0 0 18px;
+}
+
+/* When parent is white, child tables should have white and light gray alternate fills */
+.a4 table tbody tr:nth-child(odd),
+body table tbody tr:nth-child(odd) {
+    background: #ffffff;
+}
+
+.a4 table tbody tr:nth-child(even),
+body table tbody tr:nth-child(even) {
+    background: #F5F5F5;
+}
+
+/* Conditional fills: nested containers inside light gray should be white */
+/* This must come AFTER general pre rules to override them */
+/* Note: Table rows maintain their alternate coloring even inside gray parents */
+.fact .fact,
+.fact .card,
+.fact .stat,
+.fact .timeline-content,
+.card .fact,
+.card .card,
+.card .stat,
+.card .timeline-content,
+.stat .fact,
+.stat .card,
+.stat .stat,
+.stat .timeline-content,
+.citations .fact,
+.citations .card,
+.citations .stat,
+.citations .timeline-content,
+.timeline-content .fact,
+.timeline-content .card,
+.timeline-content .stat,
+.timeline-content .timeline-content {
+    background: #ffffff;
+}
+
+/* Code blocks inside gray containers (.fact, .card) should be light gray for better contrast */
+.fact pre,
+.card pre,
+.stat pre,
+.citations pre,
+.timeline-content pre {
+    background: #FFFFFF;
+    margin: 12px 0;
+}
+
+/* Code blocks directly in white parents should be light gray */
+.a4 > pre,
+body > pre {
+    background: #F5F5F5;
 }
 
 .fact strong,
@@ -179,16 +349,39 @@ code {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
-    margin: 12px 0 24px 0;
+    margin: 8px 0 12px;
 }
 
 .stat {
     text-align: left;
-    padding: 12px 10px;
-    border: 1px solid #999999;
+    padding: 12px 16px;
+    border: 1.5px solid #888888;
     border-radius: 10px;
     background: #F5F5F5;
+    margin: 6px 0 10px 0;
 }
+
+.stat p {
+    margin: 0;
+}
+
+.stat h2,
+.stat h3,
+.stat h4,
+.stat h5,
+.stat h6 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.stat ul {
+    margin: 0 0 0 18px;
+}
+
+.stat pre {
+    margin: 0;
+}
+
 
 .stat .big {
     font-size: 28px;
@@ -201,7 +394,7 @@ code {
     font-size: 14px;
     color: #444444;
     line-height: 1.3;
-    margin: 10px 0;
+    margin: 0;
 }
 
 .figure {
@@ -239,8 +432,8 @@ code {
     left: 50px;
     top: 0;
     bottom: 0;
-    width: 1px;
-    background: #999999;
+    width: 2px;
+    background: #888888;
 }
 
 .timeline-item {
@@ -253,7 +446,7 @@ code {
 .timeline-item::before {
     content: '';
     position: absolute;
-    left: 44px;
+    left: 50px;
     top: 18px;
     width: 12px;
     height: 12px;
@@ -261,11 +454,12 @@ code {
     background: #5B9BD5;
     border: 3px solid #fff;
     box-shadow: 0 0 0 1px #999999;
+    transform: translate(-50%, -50%);
 }
 
 .timeline-date {
     position: absolute;
-    left: -10px;
+    left: 10px;
     top: 18px;
     transform: translateY(-50%);
     font-size: 12px;
@@ -275,17 +469,22 @@ code {
     text-orientation: mixed;
     line-height: 1.2;
     font-family: Helvetica, Arial, sans-serif;
-    width: 40px;
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 12px;
 }
 
 .timeline-content {
     background: #F5F5F5;
-    border: 1px solid #999999;
+    border: 2px solid #888888;
     border-radius: 10px;
     padding: 12px 16px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     font-family: Helvetica, Arial, sans-serif;
 }
+
 
 .timeline-title {
     font-size: 14px;
@@ -306,19 +505,41 @@ code {
 }
 
 .citations {
-    margin: 20px 0;
-    padding: 16px;
+    margin: 6px 0 10px 0;
+    padding: 12px 16px;
     background: #F5F5F5;
-    border: 1px solid #999999;
+    border: 1.5px solid #888888;
     border-left: 6px solid #5B9BD5;
     border-radius: 10px;
 }
 
+.card + .citations {
+    margin-top: 16px;
+}
+
+.citations p {
+    margin: 0;
+}
+
+.citations h2,
+.citations h3,
+.citations h4,
+.citations h5,
+.citations h6 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.citations ul {
+    margin: 0 0 0 18px;
+}
+
 .citations h3 {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 600;
-    color: #444444;
-    margin: 0 0 12px 0;
+    color: #5B9BD5;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     text-align: left;
 }
 
