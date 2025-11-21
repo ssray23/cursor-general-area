@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS AppSync: First Principles Guide</title>
+    <link rel="stylesheet" href="A4.css">
+</head>
+<body>
+    <div class="a4">
+        <h1>AWS AppSync: First Principles Guide</h1>
+        
+        <p>AWS AppSync is a fully managed GraphQL service that simplifies application development by letting you create a flexible API to securely access, manipulate, and combine data from one or more data sources.</p>
+
+        <div class="fact">
+            <h2>What is GraphQL?</h2>
+            <p>GraphQL is a query language for APIs and a runtime for executing those queries. Unlike REST APIs where you get fixed data structures, GraphQL lets clients request exactly the data they need, nothing more, nothing less.</p>
+        </div>
+
+        <h2>Core Concepts</h2>
+
+        <div class="card">
+            <h3>1. Schema Definition</h3>
+            <p>Your GraphQL schema defines the types of data you can query and the operations available. It's like a contract between your API and clients.</p>
+            <pre><code>type Post {
+  id: ID!
+  title: String!
+  content: String
+  author: String
+}
+
+type Query {
+  getPost(id: ID!): Post
+  listPosts: [Post]
+}
+
+type Mutation {
+  createPost(title: String!, content: String): Post
+}</code></pre>
+        </div>
+
+        <div class="card">
+            <h3>2. Resolvers</h3>
+            <p>Resolvers are functions that tell AppSync how to fetch or modify data for each field in your schema. They connect your GraphQL operations to your data sources.</p>
+            <p>AppSync supports multiple data sources:</p>
+            <ul>
+                <li><strong>AWS Lambda:</strong> Custom business logic</li>
+                <li><strong>Amazon DynamoDB:</strong> NoSQL database</li>
+                <li><strong>Amazon RDS:</strong> Relational databases</li>
+                <li><strong>Amazon OpenSearch:</strong> Search and analytics</li>
+                <li><strong>HTTP APIs:</strong> External REST APIs</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>3. Real-time Subscriptions</h3>
+            <p>AppSync supports GraphQL subscriptions, allowing clients to receive real-time updates when data changes. This is powered by WebSockets and works seamlessly with your resolvers.</p>
+        </div>
+
+        <h2>Simple Example: Todo App</h2>
+
+        <p>Let's build a simple todo application to understand AppSync in practice.</p>
+
+        <div class="card">
+            <h3>Step 1: Define the Schema</h3>
+            <pre><code>type Todo {
+  id: ID!
+  title: String!
+  completed: Boolean!
+  createdAt: String!
+}
+
+type Query {
+  getTodo(id: ID!): Todo
+  listTodos: [Todo]
+}
+
+type Mutation {
+  createTodo(title: String!): Todo
+  updateTodo(id: ID!, completed: Boolean!): Todo
+  deleteTodo(id: ID!): Todo
+}
+
+type Subscription {
+  onTodoUpdate: Todo
+    @aws_subscribe(mutations: ["createTodo", "updateTodo"])
+}</code></pre>
+        </div>
+
+        <div class="card">
+            <h3>Step 2: Create a DynamoDB Table</h3>
+            <p>We'll use DynamoDB as our data source. The table structure:</p>
+            <ul>
+                <li><strong>Table Name:</strong> Todos</li>
+                <li><strong>Partition Key:</strong> id (String)</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Step 3: Configure Resolvers</h3>
+            <p>For the <code>createTodo</code> mutation, we create a resolver that:</p>
+            <ol>
+                <li>Takes the input (title)</li>
+                <li>Generates an ID and timestamp</li>
+                <li>Writes to DynamoDB</li>
+                <li>Returns the created todo</li>
+            </ol>
+            <p><strong>Request Mapping Template (VTL):</strong></p>
+            <pre><code>{
+  "version": "2017-02-28",
+  "operation": "PutItem",
+  "key": {
+    "id": $util.dynamodb.toDynamoDBJson($util.autoId())
+  },
+  "attributeValues": {
+    "title": $util.dynamodb.toDynamoDBJson($ctx.arguments.title),
+    "completed": $util.dynamodb.toDynamoDBJson(false),
+    "createdAt": $util.dynamodb.toDynamoDBJson($util.time.nowISO8601())
+  }
+}</code></pre>
+            <p><strong>Response Mapping Template:</strong></p>
+            <pre><code>$util.toJson($ctx.result)</code></pre>
+        </div>
+
+        <div class="card">
+            <h3>Step 4: Query Your API</h3>
+            <p>Once configured, clients can query your API:</p>
+            <p><strong>Create a Todo:</strong></p>
+            <pre><code>mutation {
+  createTodo(title: "Learn AWS AppSync") {
+    id
+    title
+    completed
+    createdAt
+  }
+}</code></pre>
+            <p><strong>List All Todos:</strong></p>
+            <pre><code>query {
+  listTodos {
+    id
+    title
+    completed
+  }
+}</code></pre>
+            <p><strong>Subscribe to Updates:</strong></p>
+            <pre><code>subscription {
+  onTodoUpdate {
+    id
+    title
+    completed
+  }
+}</code></pre>
+        </div>
+
+        <h2>Key Features</h2>
+
+        <div class="stat-grid">
+            <div class="stat">
+                <p class="big">Built-in Auth</p>
+                <p class="sub">Supports API Keys, IAM, Cognito User Pools, OIDC, and Lambda authorizers</p>
+            </div>
+            <div class="stat">
+                <p class="big">Offline Support</p>
+                <p class="sub">AWS Amplify clients can work offline and sync when online</p>
+            </div>
+            <div class="stat">
+                <p class="big">Real-time</p>
+                <p class="sub">WebSocket-based subscriptions for live data updates</p>
+            </div>
+        </div>
+
+        <div class="fact">
+            <h2>Why Use AppSync?</h2>
+            <ul>
+                <li><strong>Fully Managed:</strong> No servers to provision or manage</li>
+                <li><strong>Automatic Scaling:</strong> Handles traffic spikes automatically</li>
+                <li><strong>Multiple Data Sources:</strong> Combine data from different sources in a single query</li>
+                <li><strong>Fine-grained Authorization:</strong> Control access at the field level</li>
+                <li><strong>Cost Effective:</strong> Pay only for what you use</li>
+            </ul>
+        </div>
+
+        <h2>Getting Started</h2>
+
+        <div class="card">
+            <h3>1. Create an AppSync API</h3>
+            <p>In the AWS Console:</p>
+            <ol>
+                <li>Navigate to AWS AppSync</li>
+                <li>Click "Create API"</li>
+                <li>Choose "Build from scratch" or use a sample schema</li>
+                <li>Configure authentication (start with API Key for testing)</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <h3>2. Define Your Schema</h3>
+            <p>In the Schema editor, define your types, queries, mutations, and subscriptions. AppSync provides autocomplete and validation.</p>
+        </div>
+
+        <div class="card">
+            <h3>3. Create Data Sources</h3>
+            <p>Connect your data sources (DynamoDB, Lambda, etc.) to your API. You can create data sources in the AppSync console.</p>
+        </div>
+
+        <div class="card">
+            <h3>4. Attach Resolvers</h3>
+            <p>For each field that needs data, attach a resolver. AppSync provides:</p>
+            <ul>
+                <li>Visual resolver configuration</li>
+                <li>VTL (Velocity Template Language) templates</li>
+                <li>JavaScript resolvers (for Lambda data sources)</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>5. Test Your API</h3>
+            <p>Use the built-in GraphQL query editor in the AppSync console to test your queries, mutations, and subscriptions.</p>
+        </div>
+
+        <div class="card">
+            <h3>6. Connect Your Client</h3>
+            <p>Use AWS Amplify or any GraphQL client to connect to your API:</p>
+            <pre><code>// Using AWS Amplify
+import { API } from 'aws-amplify';
+import { createTodo } from './graphql/mutations';
+
+const newTodo = await API.graphql({
+  query: createTodo,
+  variables: { title: 'My first todo' }
+});</code></pre>
+        </div>
+
+        <h2>Common Patterns</h2>
+
+        <div class="card">
+            <h3>Pagination</h3>
+            <p>AppSync supports cursor-based pagination for DynamoDB:</p>
+            <pre><code>type Query {
+  listTodos(limit: Int, nextToken: String): TodoConnection
+}
+
+type TodoConnection {
+  items: [Todo]
+  nextToken: String
+}</code></pre>
+        </div>
+
+        <div class="card">
+            <h3>Filtering</h3>
+            <p>Add filter arguments to queries:</p>
+            <pre><code>type Query {
+  listTodos(filter: TodoFilter): [Todo]
+}
+
+input TodoFilter {
+  completed: Boolean
+  title: StringFilterInput
+}</code></pre>
+        </div>
+
+        <div class="card">
+            <h3>Batch Operations</h3>
+            <p>Use batch resolvers to fetch multiple items efficiently:</p>
+            <pre><code>type Query {
+  getTodos(ids: [ID!]!): [Todo]
+}</code></pre>
+        </div>
+
+        <div class="fact">
+            <h2>Best Practices</h2>
+            <ul>
+                <li><strong>Start Simple:</strong> Begin with basic queries and mutations, add complexity gradually</li>
+                <li><strong>Use Direct Resolvers:</strong> For simple DynamoDB operations, use direct resolvers instead of Lambda</li>
+                <li><strong>Implement Authorization:</strong> Always configure proper authentication and authorization</li>
+                <li><strong>Monitor Performance:</strong> Use CloudWatch to monitor resolver latency and errors</li>
+                <li><strong>Version Your Schema:</strong> Use schema versioning for production applications</li>
+                <li><strong>Cache When Appropriate:</strong> Enable caching for read-heavy workloads</li>
+            </ul>
+        </div>
+
+        <h2>Pricing</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Operation Type</th>
+                    <th>Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Queries & Mutations</td>
+                    <td>$4.00 per million requests</td>
+                </tr>
+                <tr>
+                    <td>Real-time Subscriptions</td>
+                    <td>$2.00 per million connection minutes</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>Free Tier</td>
+                    <td>250,000 queries/mutations and 1M connection minutes per month</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="citations">
+            <h3>Resources</h3>
+            <div class="citation">
+                <div class="citation-number">1</div>
+                <div class="citation-content">
+                    <a href="https://docs.aws.amazon.com/appsync/" class="citation-title">AWS AppSync Documentation</a>
+                    <p class="citation-snippet">Official AWS documentation for AppSync</p>
+                </div>
+            </div>
+            <div class="citation">
+                <div class="citation-number">2</div>
+                <div class="citation-content">
+                    <a href="https://graphql.org/learn/" class="citation-title">GraphQL Learn</a>
+                    <p class="citation-snippet">Learn GraphQL fundamentals</p>
+                </div>
+            </div>
+            <div class="citation">
+                <div class="citation-number">3</div>
+                <div class="citation-content">
+                    <a href="https://aws.amazon.com/appsync/pricing/" class="citation-title">AWS AppSync Pricing</a>
+                    <p class="citation-snippet">Detailed pricing information</p>
+                </div>
+            </div>
+        </div>
+
+        <p class="note">This guide provides a first-principles introduction to AWS AppSync. For production applications, refer to the official AWS documentation and best practices.</p>
+    </div>
+</body>
+</html>
+
