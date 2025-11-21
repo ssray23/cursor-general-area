@@ -95,10 +95,14 @@ p {
 .card {
     background: #F5F5F5;
     border-radius: 10px;
-    padding: 12px 16px;
+    padding: 12px 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     border: 1.5px solid #888888;
-    margin: 6px 0 10px 0;
+    margin: 16px 0 20px 0;
+}
+
+.card + .card {
+    margin-top: 24px;
 }
 
 .card p {
@@ -110,12 +114,17 @@ p {
 .card h4,
 .card h5,
 .card h6 {
-    margin-top: 0;
-    margin-bottom: 0;
+    margin-top: 20px;
+    margin-bottom: 8px;
 }
 
 .card ul {
-    margin: 0 0 0 18px;
+    margin: 0;
+    padding-left: 18px;
+}
+
+.card li:last-child {
+    margin-bottom: 0;
 }
 
 .card pre {
@@ -211,7 +220,8 @@ tfoot td {
 }
 
 ul {
-    margin: 6px 0 12px 18px;
+    margin: 0;
+    padding-left: 18px;
 }
 
 code {
@@ -261,7 +271,7 @@ pre code {
     border: 1.5px solid #888888;
     border-left: 6px solid #5B9BD5;
     border-radius: 10px;
-    padding: 12px 16px;
+    padding: 12px 20px;
     margin: 6px 0 10px 0;
     color: #444444;
 }
@@ -279,12 +289,17 @@ pre code {
 .fact h4,
 .fact h5,
 .fact h6 {
-    margin-top: 0;
-    margin-bottom: 0;
+    margin-top: 20px;
+    margin-bottom: 8px;
 }
 
 .fact ul {
-    margin: 0 0 0 18px;
+    margin: 0;
+    padding-left: 18px;
+}
+
+.fact li:last-child {
+    margin-bottom: 0;
 }
 
 /* When parent is white, child tables should have white and light gray alternate fills */
@@ -324,7 +339,7 @@ body table tbody tr:nth-child(even) {
     background: #ffffff;
 }
 
-/* Code blocks inside gray containers (.fact, .card) should be light gray for better contrast */
+/* Code blocks inside gray containers (.fact, .card) should be white */
 .fact pre,
 .card pre,
 .stat pre,
@@ -332,6 +347,19 @@ body table tbody tr:nth-child(even) {
 .timeline-content pre {
     background: #FFFFFF;
     margin: 12px 0;
+}
+
+/* Code blocks inside white containers (nested facts/cards that became white) should be light gray */
+.fact .fact pre,
+.card .fact pre,
+.card .card pre,
+.stat .fact pre,
+.stat .card pre,
+.citations .fact pre,
+.citations .card pre,
+.timeline-content .fact pre,
+.timeline-content .card pre {
+    background: #F5F5F5;
 }
 
 /* Code blocks directly in white parents should be light gray */
@@ -354,7 +382,7 @@ body > pre {
 
 .stat {
     text-align: left;
-    padding: 12px 16px;
+    padding: 12px 20px;
     border: 1.5px solid #888888;
     border-radius: 10px;
     background: #F5F5F5;
@@ -370,12 +398,17 @@ body > pre {
 .stat h4,
 .stat h5,
 .stat h6 {
-    margin-top: 0;
-    margin-bottom: 0;
+    margin-top: 20px;
+    margin-bottom: 8px;
 }
 
 .stat ul {
-    margin: 0 0 0 18px;
+    margin: 0;
+    padding-left: 18px;
+}
+
+.stat li:last-child {
+    margin-bottom: 0;
 }
 
 .stat pre {
@@ -421,7 +454,7 @@ body > pre {
 
 .timeline {
     position: relative;
-    margin: 20px 0 20px 60px;
+    margin: 20px 0 20px 15px;
     padding: 0;
     font-family: Helvetica, Arial, sans-serif;
 }
@@ -478,9 +511,9 @@ body > pre {
 
 .timeline-content {
     background: #F5F5F5;
-    border: 2px solid #888888;
+    border: 1.5px solid #888888;
     border-radius: 10px;
-    padding: 12px 16px;
+    padding: 12px 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     font-family: Helvetica, Arial, sans-serif;
 }
@@ -506,7 +539,7 @@ body > pre {
 
 .citations {
     margin: 6px 0 10px 0;
-    padding: 12px 16px;
+    padding: 12px 20px;
     background: #F5F5F5;
     border: 1.5px solid #888888;
     border-left: 6px solid #5B9BD5;
@@ -526,12 +559,17 @@ body > pre {
 .citations h4,
 .citations h5,
 .citations h6 {
-    margin-top: 0;
-    margin-bottom: 0;
+    margin-top: 20px;
+    margin-bottom: 8px;
 }
 
 .citations ul {
-    margin: 0 0 0 18px;
+    margin: 0;
+    padding-left: 18px;
+}
+
+.citations li:last-child {
+    margin-bottom: 0;
 }
 
 .citations h3 {

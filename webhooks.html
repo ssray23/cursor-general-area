@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webhooks: A First Principles Guide</title>
+    <link rel="stylesheet" href="A4.css">
+</head>
+<body>
+    <div class="a4">
+        <h1>Webhooks: A First Principles Guide</h1>
+        
+        <div class="fact">
+            <p><strong>Webhooks are HTTP callbacks</strong> that allow one application to notify another application in real-time when a specific event occurs. Instead of continuously asking "has something changed?" (polling), webhooks enable applications to say "tell me when something happens" (event-driven).</p>
+        </div>
+
+        <h2>The Fundamental Problem</h2>
+        
+        <p>In distributed systems, applications often need to know when something happens in another system. Consider these scenarios:</p>
+        
+        <ul>
+            <li>A payment processor needs to notify your application when a payment is completed</li>
+            <li>A version control system needs to trigger a deployment when code is pushed</li>
+            <li>A messaging service needs to alert your app when a new message arrives</li>
+        </ul>
+
+        <div class="card">
+            <h3>The Polling Problem</h3>
+            <p>Without webhooks, applications use <strong>polling</strong>: repeatedly asking "has anything changed?" at regular intervals.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Approach</th>
+                        <th>Efficiency</th>
+                        <th>Latency</th>
+                        <th>Resource Usage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Polling (every 1 second)</td>
+                        <td>Low - 99% of requests return "no change"</td>
+                        <td>Up to 1 second delay</td>
+                        <td>High - constant requests</td>
+                    </tr>
+                    <tr>
+                        <td>Polling (every 60 seconds)</td>
+                        <td>Medium - fewer requests</td>
+                        <td>Up to 60 seconds delay</td>
+                        <td>Medium - periodic requests</td>
+                    </tr>
+                    <tr>
+                        <td>Webhooks</td>
+                        <td>High - only when events occur</td>
+                        <td>Near-instantaneous</td>
+                        <td>Low - event-driven</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>How Webhooks Work</h2>
+
+        <p>Webhooks follow a simple pattern:</p>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-date">1</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Registration</div>
+                    <div class="timeline-description">Your application provides a URL endpoint to the service provider. This is where you want to receive notifications.</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">2</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Event Occurs</div>
+                    <div class="timeline-description">Something happens in the service provider's system (e.g., payment completed, file uploaded, user registered).</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">3</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">HTTP POST</div>
+                    <div class="timeline-description">The service provider sends an HTTP POST request to your registered URL with event data in the request body (typically JSON).</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">4</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Processing</div>
+                    <div class="timeline-description">Your application receives the webhook, validates it, and processes the event accordingly.</div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Core Concepts</h2>
+
+        <div class="stat-grid">
+            <div class="stat">
+                <p class="big">HTTP POST</p>
+                <p class="sub">Webhooks use standard HTTP POST requests, making them compatible with any web server</p>
+            </div>
+            
+            <div class="stat">
+                <p class="big">Event-Driven</p>
+                <p class="sub">Notifications happen only when events occur, not on a schedule</p>
+            </div>
+            
+            <div class="stat">
+                <p class="big">One-Way</p>
+                <p class="sub">Webhooks are unidirectional: service → your application</p>
+            </div>
+        </div>
+
+        <h3>Webhook Payload Structure</h3>
+
+        <p>Webhook payloads typically include:</p>
+
+        <div class="card">
+            <ul>
+                <li><strong>Event Type:</strong> What happened (e.g., "payment.completed", "user.created")</li>
+                <li><strong>Event Data:</strong> Details about the event (e.g., payment amount, user ID)</li>
+                <li><strong>Metadata:</strong> Timestamp, event ID, webhook signature for verification</li>
+            </ul>
+        </div>
+
+        <h3>Example Webhook Payload</h3>
+
+        <pre><code>POST /webhooks/payment
+Content-Type: application/json
+X-Webhook-Signature: sha256=abc123...
+
+{
+  "event": "payment.completed",
+  "timestamp": "2024-01-15T10:30:00Z",
+  "data": {
+    "payment_id": "pay_123456",
+    "amount": 99.99,
+    "currency": "USD",
+    "customer_id": "cust_789",
+    "status": "succeeded"
+  }
+}</code></pre>
+
+        <h2>Security Considerations</h2>
+
+        <div class="fact">
+            <h3>Webhook Verification</h3>
+            <p>Always verify webhook authenticity. Common methods include:</p>
+            <ul>
+                <li><strong>Signature Verification:</strong> Service provider signs payload with a secret key using HMAC</li>
+                <li><strong>TLS/HTTPS:</strong> Always use HTTPS endpoints to encrypt data in transit</li>
+                <li><strong>IP Whitelisting:</strong> Restrict webhook endpoints to known service provider IPs</li>
+                <li><strong>Idempotency:</strong> Handle duplicate webhooks using event IDs</li>
+            </ul>
+        </div>
+
+        <h3>Signature Verification Example</h3>
+
+        <pre><code>// Pseudo-code for webhook verification
+function verifyWebhook(payload, signature, secret) {
+    const expectedSignature = hmacSha256(payload, secret);
+    return constantTimeCompare(signature, expectedSignature);
+}
+
+// Always use constant-time comparison to prevent timing attacks
+function constantTimeCompare(a, b) {
+    if (a.length !== b.length) return false;
+    let result = 0;
+    for (let i = 0; i < a.length; i++) {
+        result |= a[i] ^ b[i];
+    }
+    return result === 0;
+}</code></pre>
+
+        <h2>Webhooks vs. Alternatives</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Real-time</th>
+                    <th>Efficiency</th>
+                    <th>Complexity</th>
+                    <th>Use Case</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Polling</td>
+                    <td>No (delayed)</td>
+                    <td>Low</td>
+                    <td>Low</td>
+                    <td>Simple, low-frequency checks</td>
+                </tr>
+                <tr>
+                    <td>Webhooks</td>
+                    <td>Yes</td>
+                    <td>High</td>
+                    <td>Medium</td>
+                    <td>Event notifications, integrations</td>
+                </tr>
+                <tr>
+                    <td>WebSockets</td>
+                    <td>Yes</td>
+                    <td>High</td>
+                    <td>High</td>
+                    <td>Bidirectional real-time communication</td>
+                </tr>
+                <tr>
+                    <td>Server-Sent Events (SSE)</td>
+                    <td>Yes</td>
+                    <td>Medium</td>
+                    <td>Medium</td>
+                    <td>One-way server-to-client streaming</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Common Use Cases</h2>
+
+        <div class="card">
+            <h3>Payment Processing</h3>
+            <p>Payment gateways notify your application when transactions are completed, failed, or refunded. This enables immediate order fulfillment or user notifications.</p>
+        </div>
+
+        <div class="card">
+            <h3>CI/CD Pipelines</h3>
+            <p>Version control systems (GitHub, GitLab) trigger deployments, tests, or builds when code is pushed to specific branches.</p>
+        </div>
+
+        <div class="card">
+            <h3>Communication Platforms</h3>
+            <p>Messaging services (Slack, Discord) allow bots to respond to messages, commands, or events in real-time.</p>
+        </div>
+
+        <div class="card">
+            <h3>E-commerce</h3>
+            <p>Online stores notify inventory systems, shipping providers, or customer service platforms when orders are placed or updated.</p>
+        </div>
+
+        <h2>Implementation Best Practices</h2>
+
+        <div class="fact">
+            <h3>1. Idempotency</h3>
+            <p>Process the same webhook multiple times safely. Use event IDs to track processed events and prevent duplicate processing.</p>
+        </div>
+
+        <div class="fact">
+            <h3>2. Fast Response</h3>
+            <p>Return HTTP 200 quickly (within seconds). Process the webhook asynchronously if it requires heavy computation.</p>
+        </div>
+
+        <div class="fact">
+            <h3>3. Retry Logic</h3>
+            <p>Service providers will retry failed webhooks. Design your endpoint to handle retries gracefully, or explicitly return appropriate status codes.</p>
+        </div>
+
+        <div class="fact">
+            <h3>4. Logging</h3>
+            <p>Log all webhook requests for debugging, auditing, and monitoring. Include event type, timestamp, and processing status.</p>
+        </div>
+
+        <h2>Webhook Endpoint Implementation</h2>
+
+        <p>A robust webhook endpoint should:</p>
+
+        <pre><code>// Express.js example
+app.post('/webhooks/payment', express.raw({type: 'application/json'}), (req, res) => {
+    // 1. Verify signature
+    const signature = req.headers['x-webhook-signature'];
+    if (!verifySignature(req.body, signature, WEBHOOK_SECRET)) {
+        return res.status(401).send('Invalid signature');
+    }
+    
+    // 2. Parse payload
+    const event = JSON.parse(req.body);
+    
+    // 3. Check idempotency
+    if (isEventProcessed(event.id)) {
+        return res.status(200).send('Event already processed');
+    }
+    
+    // 4. Process asynchronously
+    processEventAsync(event).catch(err => {
+        console.error('Webhook processing error:', err);
+    });
+    
+    // 5. Respond quickly
+    res.status(200).json({received: true});
+});
+
+async function processEventAsync(event) {
+    // Mark as processing
+    markEventProcessing(event.id);
+    
+    try {
+        // Business logic here
+        await handlePaymentEvent(event);
+        
+        // Mark as completed
+        markEventCompleted(event.id);
+    } catch (error) {
+        markEventFailed(event.id, error);
+        throw error;
+    }
+}</code></pre>
+
+        <h2>Testing Webhooks</h2>
+
+        <div class="card">
+            <h3>Local Development</h3>
+            <p>Use tools like <strong>ngrok</strong> or <strong>localtunnel</strong> to expose your local server to the internet for webhook testing.</p>
+        </div>
+
+        <div class="card">
+            <h3>Webhook Testing Services</h3>
+            <p>Services like <strong>webhook.site</strong> or <strong>RequestBin</strong> provide temporary URLs to inspect incoming webhook payloads.</p>
+        </div>
+
+        <h2>Key Takeaways</h2>
+
+        <div class="stat-grid">
+            <div class="stat">
+                <p class="big">Event-Driven</p>
+                <p class="sub">Webhooks enable real-time, event-driven communication between systems</p>
+            </div>
+            
+            <div class="stat">
+                <p class="big">Efficient</p>
+                <p class="sub">Only send data when events occur, not on a schedule</p>
+            </div>
+            
+            <div class="stat">
+                <p class="big">Standard</p>
+                <p class="sub">Built on HTTP, making them universally compatible</p>
+            </div>
+        </div>
+
+        <div class="citations">
+            <h3>Further Reading</h3>
+            
+            <div class="citation">
+                <div class="citation-number">1</div>
+                <div class="citation-content">
+                    <a href="https://webhooks.fyi" class="citation-title">Webhooks.fyi</a>
+                    <p class="citation-snippet">A comprehensive resource on webhook patterns, best practices, and implementation guides</p>
+                </div>
+            </div>
+            
+            <div class="citation">
+                <div class="citation-number">2</div>
+                <div class="citation-content">
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP" class="citation-title">MDN Web Docs: HTTP</a>
+                    <p class="citation-snippet">Understanding the HTTP protocol that webhooks are built upon</p>
+                </div>
+            </div>
+            
+            <div class="citation">
+                <div class="citation-number">3</div>
+                <div class="citation-content">
+                    <a href="https://en.wikipedia.org/wiki/Webhook" class="citation-title">Wikipedia: Webhook</a>
+                    <p class="citation-snippet">Historical context and technical overview of webhooks</p>
+                </div>
+            </div>
+        </div>
+
+        <p class="note">This document explains webhooks from first principles, focusing on fundamental concepts rather than specific implementations. Understanding these core ideas will help you work with webhooks in any technology stack.</p>
+    </div>
+</body>
+</html>
