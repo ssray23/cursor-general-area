@@ -17,6 +17,227 @@
             <p>GraphQL is a query language for APIs and a runtime for executing those queries. Unlike REST APIs where you get fixed data structures, GraphQL lets clients request exactly the data they need, nothing more, nothing less.</p>
         </div>
 
+        <h2>Flexible Querying: Preventing Overfetching</h2>
+
+        <p>One of GraphQL's most powerful features is its ability to let clients specify exactly what data they need. This prevents overfetching (getting more data than needed) and underfetching (needing multiple requests to get all required data).</p>
+
+        <div class="card">
+            <h3>The Problem with REST APIs</h3>
+            <p>In traditional REST APIs, endpoints return fixed data structures. For example:</p>
+            <p><strong>REST Endpoint: GET /api/users/123</strong></p>
+            <pre><code>{
+  "id": "123",
+  "name": "John Doe",
+  "email": "john@example.com",
+  "phone": "555-1234",
+  "address": "123 Main St",
+  "city": "New York",
+  "country": "USA",
+  "dateOfBirth": "1990-01-01",
+  "profilePicture": "https://...",
+  "bio": "Long biography text...",
+  "preferences": { ... },
+  "lastLogin": "2024-01-15T10:30:00Z"
+}</code></pre>
+            <p>Even if you only need the user's name and email, you receive all fields, wasting bandwidth and processing time.</p>
+        </div>
+
+        <div class="card">
+            <h3>GraphQL Solution: Request Only What You Need</h3>
+            <p>With GraphQL, you specify exactly which fields you want:</p>
+            <p><strong>Query for just name and email:</strong></p>
+            <pre><code>query {
+  getUser(id: "123") {
+    name
+    email
+  }
+}</code></pre>
+            <p><strong>Response:</strong></p>
+            <pre><code>{
+  "data": {
+    "getUser": {
+      "name": "John Doe",
+      "email": "john@example.com"
+    }
+  }
+}</code></pre>
+            <p>Only the requested fields are returned, reducing payload size and improving performance.</p>
+        </div>
+
+        <div class="card">
+            <h3>Flexible Field Selection</h3>
+            <p>Different parts of your application can request different fields from the same endpoint:</p>
+            <p><strong>Mobile app (needs minimal data):</strong></p>
+            <pre><code>query {
+  getUser(id: "123") {
+    id
+    name
+    profilePicture
+  }
+}</code></pre>
+            <p><strong>Admin dashboard (needs detailed data):</strong></p>
+            <pre><code>query {
+  getUser(id: "123") {
+    id
+    name
+    email
+    phone
+    address
+    city
+    country
+    dateOfBirth
+    lastLogin
+    preferences
+  }
+}</code></pre>
+            <p>Both queries use the same endpoint but receive different data based on their needs.</p>
+        </div>
+
+        <div class="card">
+            <h3>Nested Data Selection</h3>
+            <p>GraphQL allows you to request nested related data in a single query:</p>
+            <pre><code>type User {
+  id: ID!
+  name: String!
+  email: String!
+  posts: [Post!]!
+  profile: Profile
+}
+
+type Post {
+  id: ID!
+  title: String!
+  content: String
+  comments: [Comment!]!
+}
+
+query {
+  getUser(id: "123") {
+    name
+    email
+    posts {
+      title
+      comments {
+        text
+        author {
+          name
+        }
+      }
+    }
+    profile {
+      bio
+      location
+    }
+  }
+}</code></pre>
+            <p>This single query fetches user data, their posts, comments on those posts, and profile information—all in one request, with only the fields you specify.</p>
+        </div>
+
+        <div class="card">
+            <h3>Real-World Example: E-commerce Product</h3>
+            <p>Consider an e-commerce application with a product schema:</p>
+            <pre><code>type Product {
+  id: ID!
+  name: String!
+  description: String!
+  price: Float!
+  currency: String!
+  images: [String!]!
+  reviews: [Review!]!
+  inventory: Inventory!
+  specifications: Specifications!
+  relatedProducts: [Product!]!
+  seller: Seller!
+}</code></pre>
+            <p><strong>Product list page (only needs basic info):</strong></p>
+            <pre><code>query {
+  listProducts {
+    id
+    name
+    price
+    currency
+    images
+  }
+}</code></pre>
+            <p><strong>Product detail page (needs full information):</strong></p>
+            <pre><code>query {
+  getProduct(id: "456") {
+    id
+    name
+    description
+    price
+    currency
+    images
+    reviews {
+      rating
+      comment
+      author
+    }
+    inventory {
+      stock
+      availability
+    }
+    specifications {
+      weight
+      dimensions
+      material
+    }
+    seller {
+      name
+      rating
+    }
+  }
+}</code></pre>
+            <p>Each view requests only the data it needs, optimizing performance and reducing costs.</p>
+        </div>
+
+        <div class="fact">
+            <h2>Benefits of Flexible Querying</h2>
+            <ul>
+                <li><strong>Reduced Bandwidth:</strong> Smaller payloads mean faster transfers, especially important for mobile applications</li>
+                <li><strong>Better Performance:</strong> Less data to process and transfer improves response times</li>
+                <li><strong>Lower Costs:</strong> Reduced data transfer can lower AWS data transfer costs</li>
+                <li><strong>Single Request:</strong> Fetch related data in one query instead of multiple REST calls</li>
+                <li><strong>Client Control:</strong> Frontend developers decide what data they need, not the backend</li>
+                <li><strong>Easier Evolution:</strong> Add new fields to schema without breaking existing queries</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Comparison: REST vs GraphQL</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>REST Approach</th>
+                        <th>GraphQL Approach</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Get user name only</td>
+                        <td>GET /users/123<br>(returns all user fields)</td>
+                        <td>query { getUser(id: "123") { name } }<br>(returns only name)</td>
+                    </tr>
+                    <tr>
+                        <td>Get user with posts</td>
+                        <td>GET /users/123<br>GET /users/123/posts<br>(2 requests)</td>
+                        <td>Single query with nested fields<br>(1 request)</td>
+                    </tr>
+                    <tr>
+                        <td>Mobile vs Desktop</td>
+                        <td>Same endpoint, same data<br>(overfetching on mobile)</td>
+                        <td>Different field selections<br>(optimized for each platform)</td>
+                    </tr>
+                    <tr>
+                        <td>Adding new fields</td>
+                        <td>May require new endpoint<br>or versioning</td>
+                        <td>Add to schema, existing queries<br>unaffected</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
         <h2>Core Concepts</h2>
 
         <div class="card">
@@ -276,6 +497,118 @@ input TodoFilter {
                 <li><strong>Monitor Performance:</strong> Use CloudWatch to monitor resolver latency and errors</li>
                 <li><strong>Version Your Schema:</strong> Use schema versioning for production applications</li>
                 <li><strong>Cache When Appropriate:</strong> Enable caching for read-heavy workloads</li>
+            </ul>
+        </div>
+
+        <h2>Limitations and Constraints</h2>
+
+        <div class="fact">
+            <h2>Query and Payload Limits</h2>
+            <ul>
+                <li><strong>Query Depth:</strong> Maximum query depth of 75 levels</li>
+                <li><strong>Query Complexity:</strong> Maximum query complexity score of 12,000</li>
+                <li><strong>Request Payload:</strong> Maximum request size of 1 MB (1,048,576 bytes)</li>
+                <li><strong>Response Payload:</strong> Maximum response size of 10 MB</li>
+                <li><strong>Field Selection:</strong> No explicit limit, but complex queries may hit depth/complexity limits</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Subscription Limitations</h3>
+            <ul>
+                <li><strong>Connection Timeout:</strong> Subscriptions disconnect after 2 hours of inactivity</li>
+                <li><strong>Concurrent Connections:</strong> No hard limit, but consider costs at scale</li>
+                <li><strong>Subscription Filters:</strong> Limited filtering capabilities compared to queries</li>
+                <li><strong>Message Size:</strong> Subscription messages limited to 240 KB</li>
+                <li><strong>WebSocket Protocol:</strong> Uses MQTT over WebSocket, not standard GraphQL subscriptions protocol</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Resolver Limitations</h3>
+            <ul>
+                <li><strong>VTL Template Size:</strong> Maximum 32 KB per mapping template</li>
+                <li><strong>JavaScript Resolvers:</strong> Only available for Lambda data sources, not for direct DynamoDB resolvers</li>
+                <li><strong>Resolver Timeout:</strong> Maximum execution time of 30 seconds per resolver</li>
+                <li><strong>Pipeline Resolvers:</strong> Maximum of 10 functions in a pipeline</li>
+                <li><strong>Batch Operations:</strong> DynamoDB batch operations limited to 25 items per batch</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Schema Limitations</h3>
+            <ul>
+                <li><strong>Schema Size:</strong> Maximum schema size of 1 MB</li>
+                <li><strong>Directive Support:</strong> Limited to AppSync-specific directives (@aws_auth, @aws_subscribe, etc.)</li>
+                <li><strong>Custom Scalars:</strong> Limited support for custom scalar types</li>
+                <li><strong>Schema Evolution:</strong> Breaking changes require careful versioning and migration</li>
+                <li><strong>Union Types:</strong> Supported but with limitations on resolver configuration</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Data Source Constraints</h3>
+            <ul>
+                <li><strong>DynamoDB:</strong> Limited to DynamoDB operations supported by VTL; complex queries may require Lambda</li>
+                <li><strong>RDS:</strong> Requires VPC configuration and proper security groups</li>
+                <li><strong>Lambda:</strong> Cold starts can add latency; consider provisioned concurrency for critical paths</li>
+                <li><strong>HTTP Data Sources:</strong> Limited to synchronous HTTP requests; no streaming support</li>
+                <li><strong>OpenSearch:</strong> Complex aggregations may require Lambda wrappers</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Performance and Scalability Limits</h3>
+            <ul>
+                <li><strong>Rate Limiting:</strong> Default rate limit of 1,000 requests per second per API (can be increased via support)</li>
+                <li><strong>Concurrent Requests:</strong> No hard limit, but performance degrades under extreme load</li>
+                <li><strong>Caching:</strong> TTL-based caching only; no advanced cache invalidation strategies</li>
+                <li><strong>Cold Starts:</strong> Lambda resolvers may experience cold starts affecting latency</li>
+                <li><strong>Regional Availability:</strong> Not available in all AWS regions</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Authorization Limitations</h3>
+            <ul>
+                <li><strong>Field-level Auth:</strong> Can be complex to implement and may impact performance</li>
+                <li><strong>Multi-tenant:</strong> Requires careful schema design for multi-tenant applications</li>
+                <li><strong>Dynamic Groups:</strong> Cognito group-based authorization requires additional configuration</li>
+                <li><strong>Custom Claims:</strong> Limited support for custom JWT claims in authorization rules</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Development and Tooling Limitations</h3>
+            <ul>
+                <li><strong>Local Development:</strong> No local emulator; must use AWS for testing</li>
+                <li><strong>Schema Import/Export:</strong> Limited tooling for schema version control</li>
+                <li><strong>Debugging:</strong> VTL template debugging can be challenging</li>
+                <li><strong>Testing:</strong> Integration testing requires AWS infrastructure</li>
+                <li><strong>GraphQL Playground:</strong> Built-in query editor is basic; may need external tools</li>
+            </ul>
+        </div>
+
+        <div class="fact">
+            <h2>Cost Considerations</h2>
+            <ul>
+                <li><strong>High Volume:</strong> Costs can scale quickly with high request volumes</li>
+                <li><strong>Subscriptions:</strong> Long-lived subscriptions can accumulate significant connection minute costs</li>
+                <li><strong>Lambda Costs:</strong> Using Lambda resolvers adds additional compute costs</li>
+                <li><strong>Data Transfer:</strong> Large responses incur data transfer costs</li>
+                <li><strong>No Reserved Pricing:</strong> No reserved instance or savings plans available</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>When to Consider Alternatives</h3>
+            <p>Consider alternative solutions if you need:</p>
+            <ul>
+                <li><strong>GraphQL Federation:</strong> AppSync doesn't support Apollo Federation</li>
+                <li><strong>Advanced Caching:</strong> More sophisticated caching strategies (Redis, etc.)</li>
+                <li><strong>Custom GraphQL Server:</strong> Full control over GraphQL implementation</li>
+                <li><strong>Multi-region Active-Active:</strong> AppSync is region-specific</li>
+                <li><strong>Open Source:</strong> Self-hosted GraphQL solutions (Apollo Server, Hasura, etc.)</li>
             </ul>
         </div>
 
